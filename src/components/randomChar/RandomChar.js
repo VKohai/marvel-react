@@ -1,10 +1,10 @@
 import { Component } from 'react';
+import Spinner from './../spinner/Spinner';
+import ErrorMessage from './../errorMessage/ErrorMessage';
+import MarvelService from './../../services/MarvelService';
 
 import './randomChar.scss';
-import thor from '../../resources/img/thor.jpeg';
 import mjolnir from '../../resources/img/mjolnir.png';
-import MarvelService from './../../services/MarvelService';
-import Spinner from './../spinner/Spinner';
 
 class RandomChar extends Component {
     constructor(props) {
@@ -42,10 +42,14 @@ class RandomChar extends Component {
     // #endregion 
 
     render() {
-        const { character, loading } = this.state;
+        const { character, loading, error } = this.state;
+        const errMsg = error ? <ErrorMessage /> : null;
+        const spinner = loading ? <Spinner /> : null;
+        const content = !(loading || error) ? <View character={character} /> : null;
+
         return (
             <div className="randomchar">
-                {loading ? <Spinner /> : <View character={character} />}
+                {errMsg}{spinner}{content}
                 <div className="randomchar__static">
                     <p className="randomchar__title">
                         Random character for today!<br />
