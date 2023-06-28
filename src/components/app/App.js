@@ -7,12 +7,6 @@ import CharInfo from "../charInfo/CharInfo";
 import decoration from '../../resources/img/vision.png';
 
 class App extends Component {
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        });
-    }
     checkIfImageAvaliable = (thumbnail) => {
         if (typeof (thumbnail) === "string") {
             return thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null
@@ -26,7 +20,6 @@ class App extends Component {
                 <AppHeader />
                 <main>
                     <RandomChar
-                        onError={this.onError}
                         checkIfImageAvaliable={this.checkIfImageAvaliable} />
                     <div className="char__content">
                         <CharList

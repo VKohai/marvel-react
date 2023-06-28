@@ -20,7 +20,18 @@ class CharList extends Component {
             .getCharacters(9)
             .then(this.onCharactersLoaded).catch(this.props.onError);
 
-    onCharactersLoaded = (characters) => this.setState({ characters, loading: false })
+    onCharactersLoaded = (characters) =>
+        this.setState({
+            characters,
+            loading: false
+        });
+
+    onError = () => {
+        this.setState({
+            loading: false,
+            error: true
+        });
+    }
 
     render() {
         const { characters, error, loading } = this.state;
@@ -33,18 +44,17 @@ class CharList extends Component {
             /> : null;
         return (
             <div className="char__list">
-                <ul className="char__grid">
-                    {errMsg}{spinner}{content}
-                </ul>
+                {errMsg}{spinner}{content}
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
                 </button>
             </div>
-        )
+        );
     }
 }
 
 const View = ({ characters, checkIfImageAvaliable }) => {
+    // Generating li elements with character's data
     const items = characters.map(character => {
         const isImgAvaliable = checkIfImageAvaliable(character.thumbnail);
         return (
@@ -54,6 +64,11 @@ const View = ({ characters, checkIfImageAvaliable }) => {
             </li>
         );
     });
-    return items;
+    // Align the spinner/error to the center
+    return (
+        <ul className="char__grid">
+            {items}
+        </ul>
+    );
 }
 export default CharList;

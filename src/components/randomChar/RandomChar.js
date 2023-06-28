@@ -35,6 +35,13 @@ class RandomChar extends Component {
     onCharacterLoaded = (character) => {
         this.setState({ character, loading: false });
     }
+
+    onError = () => {
+        this.setState({
+            loading: false,
+            error: true
+        });
+    }
     // #endregion 
 
     render() {
@@ -95,7 +102,7 @@ const View = ({ character, checkIfImageAvaliable }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default RandomChar;
