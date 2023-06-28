@@ -17,13 +17,15 @@ class CharList extends Component {
 
     render() {
         const { characters } = this.state;
-        const items = characters.map(character => (
-            <li className="char__item" key={character.id}>
-                <img src={character.thumbnail} alt={character.name} />
-                <div className="char__name">{character.name}</div>
-            </li>
-        ));
-        debugger;
+        const items = characters.map(character => {
+            const isImgAvaliable = this.props.checkIfImageAvaliable(character.thumbnail);
+            return (
+                <li className="char__item" key={character.id}>
+                    <img src={character.thumbnail} alt={character.name} style={isImgAvaliable} />
+                    <div className="char__name">{character.name}</div>
+                </li>
+            )
+        });
         return (
             <div className="char__list">
                 <ul className="char__grid">

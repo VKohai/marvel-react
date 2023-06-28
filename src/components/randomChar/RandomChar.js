@@ -27,18 +27,11 @@ class RandomChar extends Component {
         this.marvelService
             .getCharacterById(id)
             .then(this.onCharacterLoaded)
-            .catch(this.onError);
+            .catch(this.props.onError);
     }
     // #endregion 
 
     // #region events
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        });
-    }
-
     onCharacterLoaded = (character) => {
         this.setState({ character, loading: false });
     }
@@ -48,7 +41,12 @@ class RandomChar extends Component {
         const { character, loading, error } = this.state;
         const errMsg = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
-        const content = !(loading || error) ? <View character={character} /> : null;
+        this.props.checkIfImageAvaliable(character.thumbnail);
+        const content = !(loading || error) ?
+            <View
+                character={character}
+                checkIfImageAvaliable={this.props.checkIfImageAvaliable}
+            /> : null;
 
         return (
             <div className="randomchar">
@@ -72,14 +70,14 @@ class RandomChar extends Component {
     }
 }
 
-const View = ({ character }) => {
+const View = ({ character, checkIfImageAvaliable }) => {
     const { name, thumbnail, homepage, wiki } = character;
     let { description } = character;
     if (typeof (description) === 'string') {
         description =
             description === '' ? 'No description' : description.slice(0, 175).trim() + "...";
     }
-    const isImgAvaliable = thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null;
+    const isImgAvaliable = checkIfImageAvaliable(thumbnail);
 
     return (
         <div className="randomchar__block">
