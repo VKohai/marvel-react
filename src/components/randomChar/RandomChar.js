@@ -61,7 +61,8 @@ class RandomChar extends Component {
                     <p className="randomchar__title">
                         Or choose another one
                     </p>
-                    <button className="button button__main">
+                    <button className="button button__main"
+                        onClick={this.getRandomCharacter}>
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
@@ -78,9 +79,11 @@ const View = ({ character }) => {
         description =
             description === '' ? 'No description' : description.slice(0, 175).trim() + "...";
     }
+    const isImgAvaliable = thumbnail.match('image_not_available') ? { "object-fit": "contain" } : null;
+
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className="randomchar__img" />
+            <img src={thumbnail} alt="Random character" className="randomchar__img" style={isImgAvaliable} />
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">{description}</p>
