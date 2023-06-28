@@ -15,10 +15,13 @@ class RandomChar extends Component {
             error: false
         };
         this.marvelService = new MarvelService();
-        this.updateChar();
     }
 
     // #region methods
+    componentDidMount() {
+        this.updateChar();
+    }
+
     updateChar = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         this.marvelService
