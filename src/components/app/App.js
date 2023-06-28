@@ -7,6 +7,14 @@ import CharInfo from "../charInfo/CharInfo";
 import decoration from '../../resources/img/vision.png';
 
 class App extends Component {
+    state = {
+        selectedCharacterId: null
+    }
+
+    onCharacterSelected = (id) => {
+        this.setState({ selectedCharacterId: id })
+    }
+
     checkIfImageAvaliable = (thumbnail) => {
         if (typeof (thumbnail) === "string") {
             return thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null
@@ -23,8 +31,11 @@ class App extends Component {
                         checkIfImageAvaliable={this.checkIfImageAvaliable} />
                     <div className="char__content">
                         <CharList
+                            onCharacterSelected={this.onCharacterSelected}
                             checkIfImageAvaliable={this.checkIfImageAvaliable} />
-                        <CharInfo />
+                        <CharInfo
+                            characterId={this.state.selectedCharacterId}
+                            checkIfImageAvaliable={this.checkIfImageAvaliable} />
                     </div>
                     <img className="bg-decoration" src={decoration} alt="vision" />
                 </main>

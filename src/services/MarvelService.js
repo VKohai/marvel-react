@@ -1,6 +1,6 @@
 class MarvelService {
     #BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
-    #API_KEY = 'a8d09a552b37f6754f38c96deae0ac1f';
+    #API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
 
     request = async (url) => {
         const response = await fetch(url);
@@ -30,7 +30,8 @@ class MarvelService {
             description: character.description,
             thumbnail: thumbnailPath,
             homepage: character.urls[0].url,
-            wiki: character.urls[1].url
+            wiki: character.urls[1].url,
+            comics: character.comics.items
         };
     }
 }
