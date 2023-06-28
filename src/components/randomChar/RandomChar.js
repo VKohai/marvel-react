@@ -19,10 +19,10 @@ class RandomChar extends Component {
 
     // #region methods
     componentDidMount() {
-        this.updateChar();
+        this.getRandomCharacter();
     }
 
-    updateChar = () => {
+    getRandomCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         this.marvelService
             .getCharacterById(id)
