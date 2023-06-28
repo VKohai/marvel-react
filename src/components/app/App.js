@@ -1,10 +1,10 @@
 import { Component } from "react";
-import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
-
+import AppHeader from "../appHeader/AppHeader";
+import RandomChar from "../randomChar/RandomChar";
 import decoration from '../../resources/img/vision.png';
+import ErrorBoundary from "../errorBoundary/ErrorBoundary"
 
 class App extends Component {
     state = {
@@ -27,12 +27,16 @@ class App extends Component {
             <div className="app">
                 <AppHeader />
                 <main>
-                    <RandomChar
-                        checkIfImageAvaliable={this.checkIfImageAvaliable} />
-                    <div className="char__content">
-                        <CharList
-                            onCharacterSelected={this.onCharacterSelected}
+                    <ErrorBoundary>
+                        <RandomChar
                             checkIfImageAvaliable={this.checkIfImageAvaliable} />
+                    </ErrorBoundary>
+                    <div className="char__content">
+                        <ErrorBoundary>
+                            <CharList
+                                onCharacterSelected={this.onCharacterSelected}
+                                checkIfImageAvaliable={this.checkIfImageAvaliable} />
+                        </ErrorBoundary>
                         <CharInfo
                             characterId={this.state.selectedCharacterId}
                             checkIfImageAvaliable={this.checkIfImageAvaliable} />
