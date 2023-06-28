@@ -19,28 +19,28 @@ class RandomChar extends Component {
 
     // #region methods
     componentDidMount() {
-        this.updateChar();
+        this.getRandomCharacter();
     }
 
-    updateChar = () => {
+    getRandomCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         this.marvelService
             .getCharacterById(id)
             .then(this.onCharacterLoaded)
-            .catch(this.onError);
+            .catch(this.props.onError);
     }
     // #endregion 
 
     // #region events
+    onCharacterLoaded = (character) => {
+        this.setState({ character, loading: false });
+    }
+
     onError = () => {
         this.setState({
             loading: false,
             error: true
         });
-    }
-
-    onCharacterLoaded = (character) => {
-        this.setState({ character, loading: false });
     }
     // #endregion 
 
@@ -48,7 +48,12 @@ class RandomChar extends Component {
         const { character, loading, error } = this.state;
         const errMsg = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
-        const content = !(loading || error) ? <View character={character} /> : null;
+        this.props.checkIfImageAvaliable(character.thumbnail);
+        const content = !(loading || error) ?
+            <View
+                character={character}
+                checkIfImageAvaliable={this.props.checkIfImageAvaliable}
+            /> : null;
 
         return (
             <div className="randomchar">
@@ -61,7 +66,8 @@ class RandomChar extends Component {
                     <p className="randomchar__title">
                         Or choose another one
                     </p>
-                    <button className="button button__main">
+                    <button className="button button__main"
+                        onClick={this.getRandomCharacter}>
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
@@ -71,16 +77,18 @@ class RandomChar extends Component {
     }
 }
 
-const View = ({ character }) => {
+const View = ({ character, checkIfImageAvaliable }) => {
     const { name, thumbnail, homepage, wiki } = character;
     let { description } = character;
     if (typeof (description) === 'string') {
         description =
             description === '' ? 'No description' : description.slice(0, 175).trim() + "...";
     }
+    const isImgAvaliable = checkIfImageAvaliable(thumbnail);
+
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className="randomchar__img" />
+            <img src={thumbnail} alt="Random character" className="randomchar__img" style={isImgAvaliable} />
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">{description}</p>
@@ -94,7 +102,7 @@ const View = ({ character }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default RandomChar;
