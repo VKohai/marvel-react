@@ -79,7 +79,7 @@ const View = ({ character }) => {
         description =
             description === '' ? 'No description' : description.slice(0, 175).trim() + "...";
     }
-    const isImgAvaliable = thumbnail.match('image_not_available') ? { "object-fit": "contain" } : null;
+    const isImgAvaliable = thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null;
 
     return (
         <div className="randomchar__block">

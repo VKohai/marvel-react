@@ -23,9 +23,9 @@ class MarvelService {
     }
 
     #parseCharacter = (character) => {
-        // http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg
         const thumbnailPath = `${character.thumbnail.path}.${character.thumbnail.extension}`;
         return {
+            id: character.id,
             name: character.name,
             description: character.description,
             thumbnail: thumbnailPath,
@@ -34,6 +34,5 @@ class MarvelService {
         };
     }
 }
-
 
 export default MarvelService;
