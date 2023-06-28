@@ -30,7 +30,7 @@ class CharInfo extends Component {
     }
 
     updateCharacter = () => {
-        const { characterId } = this.state;
+        const { characterId } = this.props;
         if (!characterId)
             return;
 
@@ -88,7 +88,7 @@ const View = ({ character, checkIfImageAvaliable }) => {
             <div className="char__basics">
                 <img src={character.thumbnail} alt={character.name} style={imgStyle} />
                 <div>
-                    <div className="char__info-name">character.name</div>
+                    <div className="char__info-name">{character.name}</div>
                     <div className="char__btns">
                         <a href={character.homepage} target='_blank' rel='noreferrer' className="button button__main">
                             <div className="inner">homepage</div>
