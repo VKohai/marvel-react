@@ -10,9 +10,9 @@ class MarvelService {
         return response.json();
     }
 
-    // https://gateway.marvel.com:443/v1/public/characters?apikey=
-    getCharacters = async () => {
-        const response = await this.request(`${this.#BASE_URL}characters?apikey=${this.#API_KEY}`);
+    // https://gateway.marvel.com:443/v1/public/characters?limit=9&apikey=
+    getCharacters = async (limit) => {
+        const response = await this.request(`${this.#BASE_URL}characters?limit=${limit}&apikey=${this.#API_KEY}`);
         return response.data.results.map(this.#parseCharacter);
     }
 

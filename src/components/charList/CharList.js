@@ -1,35 +1,40 @@
 import { Component } from 'react';
 import './charList.scss';
+import Spinner from './../spinner/Spinner';
 import MarvelService from './../../services/MarvelService';
+import ErrorMessage from './../errorMessage/ErrorMessage';
 
 class CharList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            characters: []
+            characters: [],
+            loading: true,
+            error: false
         }
         this.marvelService = new MarvelService();
     }
     componentDidMount() { this.getCharacters(); }
-    getCharacters = () => this.marvelService.getCharacters().then(this.onCharactersLoaded);
+    getCharacters = () =>
+        this.marvelService
+            .getCharacters(9)
+            .then(this.onCharactersLoaded).catch(this.props.onError);
 
-    onCharactersLoaded = (characters) => this.setState({ characters })
+    onCharactersLoaded = (characters) => this.setState({ characters, loading: false })
 
     render() {
-        const { characters } = this.state;
-        const items = characters.map(character => {
-            const isImgAvaliable = this.props.checkIfImageAvaliable(character.thumbnail);
-            return (
-                <li className="char__item" key={character.id}>
-                    <img src={character.thumbnail} alt={character.name} style={isImgAvaliable} />
-                    <div className="char__name">{character.name}</div>
-                </li>
-            )
-        });
+        const { characters, error, loading } = this.state;
+        const errMsg = error ? <ErrorMessage /> : null;
+        const spinner = loading ? <Spinner /> : null;
+        const content = !(loading || error) ?
+            <View
+                characters={characters}
+                checkIfImageAvaliable={this.props.checkIfImageAvaliable}
+            /> : null;
         return (
             <div className="char__list">
                 <ul className="char__grid">
-                    {items}
+                    {errMsg}{spinner}{content}
                 </ul>
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
@@ -39,4 +44,16 @@ class CharList extends Component {
     }
 }
 
+const View = ({ characters, checkIfImageAvaliable }) => {
+    const items = characters.map(character => {
+        const isImgAvaliable = checkIfImageAvaliable(character.thumbnail);
+        return (
+            <li className="char__item" key={character.id}>
+                <img src={character.thumbnail} alt={character.name} style={isImgAvaliable} />
+                <div className="char__name">{character.name}</div>
+            </li>
+        );
+    });
+    return items;
+}
 export default CharList;
