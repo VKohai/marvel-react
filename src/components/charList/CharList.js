@@ -1,30 +1,61 @@
 import { Component } from 'react';
-import './charList.scss';
+
 import Spinner from './../spinner/Spinner';
-import MarvelService from './../../services/MarvelService';
 import ErrorMessage from './../errorMessage/ErrorMessage';
+import MarvelService from './../../services/MarvelService';
+
+import './charList.scss';
 
 class CharList extends Component {
     constructor(props) {
         super(props);
+        this.marvelService = new MarvelService();
         this.state = {
             characters: [],
             loading: true,
-            error: false
+            error: false,
+            newItemLoading: false,
+            offset: this.marvelService.base_offset,
+            deadend: false
         }
-        this.marvelService = new MarvelService();
     }
-    componentDidMount() { this.getCharacters(); }
+
+    componentDidMount() { this.onRequest() }
+
     getCharacters = () =>
         this.marvelService
             .getCharacters(9)
-            .then(this.onCharactersLoaded).catch(this.props.onError);
+            .then(this.onCharactersLoaded)
+            .catch(this.props.onError);
 
-    onCharactersLoaded = (characters) =>
+    onRequest = (offset) => {
+        this.onCharactersLoading();
+        this.marvelService
+            .getCharacters(9, offset)
+            .then(this.onCharactersLoaded)
+            .catch(this.onError);
+    }
+
+    onCharactersLoaded = (newCharacters) => {
+        const { offset } = this.state;
+        let areCharactersOver = false;
+        if (this.marvelService.totalCharacters - 9 <= offset) {
+            areCharactersOver = true;
+        }
+        this.setState(({ characters }) => ({
+            characters: [...characters, ...newCharacters],
+            loading: false,
+            newItemLoading: false,
+            offset: offset + 9,
+            deadend: areCharactersOver
+        }));
+    }
+
+    onCharactersLoading = () => {
         this.setState({
-            characters,
-            loading: false
-        });
+            newItemLoading: true
+        })
+    }
 
     onError = () => {
         this.setState({
@@ -32,6 +63,7 @@ class CharList extends Component {
             error: true
         });
     }
+
     renderItems = (characters) => {
         // Generating li elements with character's data
         const items = characters.map(character => {
@@ -53,8 +85,9 @@ class CharList extends Component {
             </ul>
         );
     }
+
     render() {
-        const { characters, error, loading } = this.state;
+        const { characters, error, loading, newItemLoading, offset, deadend } = this.state;
 
         const errMsg = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
@@ -63,7 +96,11 @@ class CharList extends Component {
         return (
             <div className="char__list">
                 {errMsg}{spinner}{content}
-                <button className="button button__main button__long">
+                <button
+                    className="button button__main button__long"
+                    style={{ display: deadend ? 'none' : 'block' }}
+                    disabled={newItemLoading}
+                    onClick={() => this.onRequest(offset)}>
                     <div className="inner">load more</div>
                 </button>
             </div>
