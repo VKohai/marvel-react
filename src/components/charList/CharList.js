@@ -10,21 +10,42 @@ class CharList extends Component {
         this.state = {
             characters: [],
             loading: true,
-            error: false
+            error: false,
+            newItemLoading: false,
+            offset: 210
         }
         this.marvelService = new MarvelService();
     }
-    componentDidMount() { this.getCharacters(); }
+
+    componentDidMount() { this.onRequest() }
+
     getCharacters = () =>
         this.marvelService
             .getCharacters(9)
             .then(this.onCharactersLoaded).catch(this.props.onError);
 
-    onCharactersLoaded = (characters) =>
+    onRequest = (offset) => {
+        this.marvelService
+            .getCharacters(9, offset)
+            .then(this.onCharactersLoaded)
+            .catch(this.props.onError);
+    }
+
+    onCharactersLoaded = (newCharacters) => {
+        debugger;
+        this.setState(({ offset, characters }) => ({
+            characters: [...characters, newCharacters],
+            loading: false,
+            newItemLoading: false,
+            offset: offset + 9
+        }));
+    }
+
+    onCharactersLoading = () => {
         this.setState({
-            characters,
-            loading: false
-        });
+            newItemLoading: true
+        })
+    }
 
     onError = () => {
         this.setState({
@@ -32,6 +53,7 @@ class CharList extends Component {
             error: true
         });
     }
+
     renderItems = (characters) => {
         // Generating li elements with character's data
         const items = characters.map(character => {
@@ -53,8 +75,9 @@ class CharList extends Component {
             </ul>
         );
     }
+
     render() {
-        const { characters, error, loading } = this.state;
+        const { characters, error, loading, newItemLoading, offset } = this.state;
 
         const errMsg = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
@@ -63,7 +86,10 @@ class CharList extends Component {
         return (
             <div className="char__list">
                 {errMsg}{spinner}{content}
-                <button className="button button__main button__long">
+                <button
+                    className="button button__main button__long"
+                    disabled={newItemLoading}
+                    onClick={() => this.onRequest(offset)}>
                     <div className="inner">load more</div>
                 </button>
             </div>
