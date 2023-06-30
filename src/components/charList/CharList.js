@@ -1,20 +1,23 @@
 import { Component } from 'react';
-import './charList.scss';
+
 import Spinner from './../spinner/Spinner';
-import MarvelService from './../../services/MarvelService';
 import ErrorMessage from './../errorMessage/ErrorMessage';
+import MarvelService from './../../services/MarvelService';
+
+import './charList.scss';
 
 class CharList extends Component {
     constructor(props) {
         super(props);
+        this.marvelService = new MarvelService();
         this.state = {
             characters: [],
             loading: true,
             error: false,
             newItemLoading: false,
-            offset: 210
+            offset: this.marvelService.base_offset,
+            deadend: false
         }
-        this.marvelService = new MarvelService();
     }
 
     componentDidMount() { this.onRequest() }
@@ -22,22 +25,29 @@ class CharList extends Component {
     getCharacters = () =>
         this.marvelService
             .getCharacters(9)
-            .then(this.onCharactersLoaded).catch(this.props.onError);
+            .then(this.onCharactersLoaded)
+            .catch(this.props.onError);
 
     onRequest = (offset) => {
+        this.onCharactersLoading();
         this.marvelService
             .getCharacters(9, offset)
             .then(this.onCharactersLoaded)
-            .catch(this.props.onError);
+            .catch(this.onError);
     }
 
     onCharactersLoaded = (newCharacters) => {
-        debugger;
-        this.setState(({ offset, characters }) => ({
-            characters: [...characters, newCharacters],
+        const { offset } = this.state;
+        let areCharactersOver = false;
+        if (this.marvelService.totalCharacters - 9 <= offset) {
+            areCharactersOver = true;
+        }
+        this.setState(({ characters }) => ({
+            characters: [...characters, ...newCharacters],
             loading: false,
             newItemLoading: false,
-            offset: offset + 9
+            offset: offset + 9,
+            deadend: areCharactersOver
         }));
     }
 
@@ -77,7 +87,7 @@ class CharList extends Component {
     }
 
     render() {
-        const { characters, error, loading, newItemLoading, offset } = this.state;
+        const { characters, error, loading, newItemLoading, offset, deadend } = this.state;
 
         const errMsg = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
@@ -88,6 +98,7 @@ class CharList extends Component {
                 {errMsg}{spinner}{content}
                 <button
                     className="button button__main button__long"
+                    style={{ display: deadend ? 'none' : 'block' }}
                     disabled={newItemLoading}
                     onClick={() => this.onRequest(offset)}>
                     <div className="inner">load more</div>
