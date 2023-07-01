@@ -1,7 +1,7 @@
 class MarvelService {
     #BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
     #API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
-    base_offset = 1552;
+    base_offset = 0;
     totalCharacters;
 
     constructor() {

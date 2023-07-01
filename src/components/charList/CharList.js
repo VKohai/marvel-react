@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 import Spinner from './../spinner/Spinner';
 import ErrorMessage from './../errorMessage/ErrorMessage';
@@ -16,11 +16,19 @@ class CharList extends Component {
             error: false,
             newItemLoading: false,
             offset: this.marvelService.base_offset,
-            deadend: false
+            deadend: false,
+            selectedItem: null
         }
+        this.refItems = [];
     }
 
-    componentDidMount() { this.onRequest() }
+    componentDidMount() {
+        this.onRequest();
+    }
+
+    setRef = element => {
+        this.refItems.push(element);
+    }
 
     getCharacters = () =>
         this.marvelService
@@ -28,6 +36,16 @@ class CharList extends Component {
             .then(this.onCharactersLoaded)
             .catch(this.props.onError);
 
+    focusOnItem = (id) => {
+        this.refItems.forEach(item => item.classList.remove('char__item_selected'));
+        this.refItems[id].classList.add('char__item_selected');
+        this.refItems[id].focus();
+        this.setState(() => ({
+            selectedItem: id
+        }));
+    }
+
+    // #region Events
     onRequest = (offset) => {
         this.onCharactersLoading();
         this.marvelService
@@ -64,15 +82,47 @@ class CharList extends Component {
         });
     }
 
+    onFocus = (id) => {
+        const { selectedItem } = this.state;
+        this.refItems.forEach((item, index) => {
+            if (index === selectedItem) return;
+            item.classList.remove('char__item_selected');
+        });
+        this.refItems[id].classList.add('char__item_selected');
+    }
+
+    onFocusLost = (id) => {
+        const { selectedItem } = this.state;
+        this.refItems.forEach((item, index) => {
+            if (index === selectedItem) return;
+            item.classList.remove('char__item_selected');
+        });
+    }
+
+    // #endregion
+
     renderItems = (characters) => {
         // Generating li elements with character's data
-        const items = characters.map(character => {
+        const items = characters.map((character, index) => {
             const isImgAvaliable = this.props.checkIfImageAvaliable(character.thumbnail);
             return (
                 <li
                     className="char__item"
+                    tabIndex={0}
                     key={character.id}
-                    onClick={() => this.props.onCharacterSelected(character.id)}>
+                    onClick={() => {
+                        this.props.onCharacterSelected(character.id);
+                        this.focusOnItem(index);
+                    }}
+                    ref={this.setRef}
+                    onKeyDown={(e) => {
+                        if (e.key === ' ' || e.key === "Enter") {
+                            this.props.onCharacterSelected(character.id);
+                            this.focusOnItem(index);
+                        }
+                    }}
+                    onFocus={() => this.onFocus(index)}
+                    onBlur={() => this.onFocusLost(index)}>
                     <img src={character.thumbnail} alt={character.name} style={isImgAvaliable} />
                     <div className="char__name">{character.name}</div>
                 </li>
