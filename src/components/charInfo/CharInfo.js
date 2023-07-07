@@ -67,12 +67,11 @@ const View = ({ character, checkIfImageAvaliable }) => {
         if (character.comics[i] === undefined)
             break;
 
-        comics[i] =
-            (
-                <li className="char__comics-item" key={i}>
-                    <a href={character.comics[i].resourceURI} target="_blank" rel="noopener noreferrer">{character.comics[i].name}</a>
-                </li>
-            );
+        comics[i] = (
+            <li className="char__comics-item" key={i}>
+                <a href={character.comics[i].resourceURI} target="_blank" rel="noopener noreferrer">{character.comics[i].name}</a>
+            </li>
+        );
     }
     return (
         <>
@@ -95,7 +94,7 @@ const View = ({ character, checkIfImageAvaliable }) => {
             </div>
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
-                {comics.length <= 0 ? "There's no comics" : comics};
+                {comics.length <= 0 ? "There's no comics" : comics}
             </ul>
         </>
     );
