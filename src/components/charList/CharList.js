@@ -16,6 +16,7 @@ function CharList(props) {
     const [offset, setOffset] = useState(baseOffset);
 
 
+    // eslint-disable-next-line
     useEffect(() => { onRequest(baseOffset, true); }, []);
 
     function focusOnItem(id) {
