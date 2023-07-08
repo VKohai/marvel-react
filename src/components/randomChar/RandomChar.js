@@ -8,7 +8,7 @@ import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
 function RandomChar(props) {
-    const { loading, error, getCharacterById } = useMarvelService();
+    const { loading, error, getCharacterById, clearError } = useMarvelService();
     const [character, setCharacter] = useState(null);
 
     useEffect(() => {
@@ -17,6 +17,7 @@ function RandomChar(props) {
     }, []);
 
     function updateCharacter() {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         getCharacterById(id).then(onCharacterLoaded);
     }

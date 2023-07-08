@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useHttp } from "../hooks/http.hook";
 
 const useMarvelService = () => {
-    const { loading, error, request } = useHttp();
+    const { loading, error, request, clearError } = useHttp();
     const _BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
     const _API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
     let baseOffset = 0;
@@ -10,6 +10,7 @@ const useMarvelService = () => {
     let totalCharacters = useMemo(async () => {
         const response = await request(`${_BASE_URL}characters?limit=${1}&apikey=${_API_KEY}`);
         return response.data.total;
+        // eslint-disable-next-line
     }, []);
 
     // https://gateway.marvel.com:443/v1/public/characters?limit=9&apikey=
@@ -37,7 +38,10 @@ const useMarvelService = () => {
         };
     }
 
-    return { loading, error, totalCharacters, baseOffset, getCharacters, getCharacterById };
+    return {
+        loading, error, clearError,
+        totalCharacters, baseOffset, getCharacters, getCharacterById
+    };
 }
 
 export default useMarvelService;
