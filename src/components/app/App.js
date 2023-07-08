@@ -34,9 +34,9 @@ function App() {
                             onCharacterSelected={onCharacterSelected}
                             checkIfImageAvaliable={checkIfImageAvaliable} />
                     </ErrorBoundary>
-                    <CharInfo
+                    {/* <CharInfo
                         characterId={selectedCharacterId}
-                        checkIfImageAvaliable={checkIfImageAvaliable} />
+                        checkIfImageAvaliable={checkIfImageAvaliable} /> */}
                 </div>
                 <img className="bg-decoration" src={decoration} alt="vision" />
             </main>

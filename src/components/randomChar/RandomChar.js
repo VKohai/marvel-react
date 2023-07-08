@@ -8,45 +8,27 @@ import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
 function RandomChar(props) {
-    const marvelService = new useMarvelService();
+    const { loading, error, getCharacterById } = useMarvelService();
     const [character, setCharacter] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
 
     useEffect(() => {
-        console.log('useEffect');
         updateCharacter();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function updateCharacter() {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        onCharacterLoading();
-        marvelService
-            .getCharacterById(id)
-            .then(onCharacterLoaded)
-            .catch(onError);
+        getCharacterById(id).then(onCharacterLoaded);
     }
 
     // #region events
     function onCharacterLoaded(character) {
-        setLoading(false);
         setCharacter(character);
-    }
-
-    function onCharacterLoading() {
-        setLoading(true);
-    }
-
-    function onError() {
-        setError(true);
-        setLoading(false);
     }
     // #endregion 
 
     const errMsg = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
-    console.log('checking...');
     props.checkIfImageAvaliable(character?.thumbnail);
     const content = !(loading || error) ?
         <View
