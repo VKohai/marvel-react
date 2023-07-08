@@ -13,7 +13,7 @@ const useMarvelService = () => {
         // eslint-disable-next-line
     }, []);
 
-    // https://gateway.marvel.com:443/v1/public/characters?limit=9&apikey=
+    // https://gateway.marvel.com:443/v1/public/characters?limit=9&offset=0&apikey=
     const getCharacters = async (limit, offset = baseOffset) => {
         const response = await request(`${_BASE_URL}characters?limit=${limit}&offset=${offset}&apikey=${_API_KEY}`);
         return response.data.results.map(parseCharacter);
@@ -24,23 +24,38 @@ const useMarvelService = () => {
         const response = await request(`${_BASE_URL}characters/${id}?apikey=${_API_KEY}`);
         return parseCharacter(response.data.results[0]);
     }
+    // https://gateway.marvel.com:443/v1/public/comics?limit=9&offset=0&apikey=
+    const getComics = async (limit, offset = baseOffset) => {
+        const response = await request(`${_BASE_URL}comics?limit=${limit}&offset=${offset}apiKey=${_API_KEY}`);
+        return response.data.results.map(parseComics);
+    }
 
     const parseCharacter = (character) => {
-        const thumbnailPath = `${character.thumbnail.path}.${character.thumbnail.extension}`;
         return {
             id: character.id,
             name: character.name,
             description: character.description,
-            thumbnail: thumbnailPath,
+            thumbnail: parseThumbnail(character),
             homepage: character.urls[0].url,
             wiki: character.urls[1].url,
             comics: character.comics.items,
         };
     }
 
+    const parseComics = (comics) => {
+        return {
+            id: comics.id,
+            title: comics.title,
+            price: comics.prices.price,
+            thumbnail: parseThumbnail(comics)
+        };
+    }
+
+    const parseThumbnail = (item) => `${item.thumbnail.path}.${item.thumbnail.extension}`;
+
     return {
         loading, error, clearError,
-        totalCharacters, baseOffset, getCharacters, getCharacterById
+        totalCharacters, baseOffset, getCharacters, getCharacterById, getComics
     };
 }
 

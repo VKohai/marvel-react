@@ -5,6 +5,7 @@ import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
 import decoration from '../../resources/img/vision.png';
 import ErrorBoundary from "../errorBoundary/ErrorBoundary"
+import ComicsList from "../comicsList/ComicsList";
 
 function App() {
     const [selectedCharacterId, setCharacterId] = useState(null);
@@ -24,19 +25,20 @@ function App() {
         <div className="app" >
             <AppHeader />
             <main>
-                <ErrorBoundary>
+                {/* <ErrorBoundary>
                     <RandomChar
                         checkIfImageAvaliable={checkIfImageAvaliable} />
-                </ErrorBoundary>
+                </ErrorBoundary> */}
                 <div className="char__content">
-                    <ErrorBoundary>
+                    <ComicsList />
+                    {/* <ErrorBoundary>
                         <CharList
                             onCharacterSelected={onCharacterSelected}
                             checkIfImageAvaliable={checkIfImageAvaliable} />
                     </ErrorBoundary>
                     <CharInfo
                         characterId={selectedCharacterId}
-                        checkIfImageAvaliable={checkIfImageAvaliable} />
+                        checkIfImageAvaliable={checkIfImageAvaliable} /> */}
                 </div>
                 <img className="bg-decoration" src={decoration} alt="vision" />
             </main>
