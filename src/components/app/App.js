@@ -31,14 +31,14 @@ function App() {
                 </ErrorBoundary>
                 <div className="char__content">
                     <ComicsList checkIfImageAvaliable={checkIfImageAvaliable} />
-                    {/* <ErrorBoundary>
+                    <ErrorBoundary>
                         <CharList
                             onCharacterSelected={onCharacterSelected}
                             checkIfImageAvaliable={checkIfImageAvaliable} />
                     </ErrorBoundary>
                     <CharInfo
                         characterId={selectedCharacterId}
-                        checkIfImageAvaliable={checkIfImageAvaliable} /> */}
+                        checkIfImageAvaliable={checkIfImageAvaliable} />
                 </div>
                 <img className="bg-decoration" src={decoration} alt="vision" />
             </main>

@@ -2,12 +2,11 @@ import './comicsList.scss';
 import useMarvelService from '../../services/MarvelService';
 import ErrorMessage from './../errorMessage/ErrorMessage';
 import Spinner from './../spinner/Spinner';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const ComicsList = (props) => {
     const [deadend, setDeadend] = useState(false);
     const [comics, setComics] = useState([]);
-    const [selectedItem, setSelectedItem] = useState(null);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const { loading, error, totalComics, baseOffset, getComics } = useMarvelService();
     const [offset, setOffset] = useState(baseOffset);
@@ -29,7 +28,7 @@ const ComicsList = (props) => {
         }
         setComics([...comics, ...newComics]);
         setNewItemLoading(false);
-        setOffset(offset + 8);
+        setOffset(offset => offset + 8);
         setDeadend(areComicsOver);
     }
 
@@ -68,7 +67,11 @@ const ComicsList = (props) => {
     return (
         <div className="comics__list">
             {errMsg}{spinner}{items}
-            <button className="button button__main button__long">
+            <button
+                className="button button__main button__long"
+                style={{ display: deadend ? 'none' : 'block' }}
+                disabled={newItemLoading}
+                onClick={() => onRequest(offset)}>
                 <div className="inner">load more</div>
             </button>
         </div>
