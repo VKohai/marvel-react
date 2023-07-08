@@ -15,7 +15,6 @@ function CharList(props) {
     const { loading, error, totalCharacters, baseOffset, getCharacters } = useMarvelService();
     const [offset, setOffset] = useState(baseOffset);
 
-
     // eslint-disable-next-line
     useEffect(() => { onRequest(baseOffset, true); }, []);
 
