@@ -25,12 +25,12 @@ function App() {
         <div className="app" >
             <AppHeader />
             <main>
-                {/* <ErrorBoundary>
+                <ErrorBoundary>
                     <RandomChar
                         checkIfImageAvaliable={checkIfImageAvaliable} />
-                </ErrorBoundary> */}
+                </ErrorBoundary>
                 <div className="char__content">
-                    <ComicsList />
+                    <ComicsList checkIfImageAvaliable={checkIfImageAvaliable} />
                     {/* <ErrorBoundary>
                         <CharList
                             onCharacterSelected={onCharacterSelected}
