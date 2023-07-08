@@ -43,8 +43,7 @@ function App() {
                 <img className="bg-decoration" src={decoration} alt="vision" />
             </main>
         </div>
-    )
-
+    );
 }
 
 export default App;

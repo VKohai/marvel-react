@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import Spinner from './../spinner/Spinner';
 import ErrorMessage from './../errorMessage/ErrorMessage';
 import useMarvelService from './../../services/MarvelService';
-import { useSelectedItem } from '../../hooks/selectedItem.hook';
 
 import './charList.scss';
 
@@ -42,7 +41,6 @@ function CharList(props) {
         setOffset(offset + 9);
         setDeadend(areCharactersOver);
     }
-
 
     function onFocus(id) {
         refItems.current.forEach((item, index) => {

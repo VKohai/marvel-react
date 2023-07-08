@@ -2,7 +2,7 @@ import './comicsList.scss';
 import useMarvelService from '../../services/MarvelService';
 import ErrorMessage from './../errorMessage/ErrorMessage';
 import Spinner from './../spinner/Spinner';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ComicsList = (props) => {
     const [deadend, setDeadend] = useState(false);
@@ -32,7 +32,6 @@ const ComicsList = (props) => {
         setDeadend(areComicsOver);
     }
 
-
     const renderItems = (comics) => {
         const items = comics.map((item, index) => {
             const style = props.checkIfImageAvaliable(item.thumbnail);
@@ -56,7 +55,7 @@ const ComicsList = (props) => {
             <ul className="comics__grid">
                 {items}
             </ul>
-        )
+        );
     }
 
 
@@ -75,7 +74,7 @@ const ComicsList = (props) => {
                 <div className="inner">load more</div>
             </button>
         </div>
-    )
+    );
 }
 
 export default ComicsList;
