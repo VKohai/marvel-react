@@ -7,18 +7,16 @@ import useMarvelService from './../../services/MarvelService';
 import './charList.scss';
 
 function CharList(props) {
-    const marvelService = new useMarvelService();
-    const [characters, setCharacters] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [deadend, setDeadend] = useState(false);
-    const [newItemLoading, setNewItemLoading] = useState(false);
-    const [offset, setOffset] = useState(marvelService.base_offset);
-    const [selectedItem, setSelectedItem] = useState(null);
-
     const refItems = useRef([]);
+    const [deadend, setDeadend] = useState(false);
+    const [characters, setCharacters] = useState([]);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [newItemLoading, setNewItemLoading] = useState(false);
+    const { loading, error, totalCharacters, baseOffset, getCharacters } = useMarvelService();
+    const [offset, setOffset] = useState(baseOffset);
 
-    useEffect(() => { onRequest(); }, []);
+
+    useEffect(() => { onRequest(baseOffset, true); }, []);
 
     function focusOnItem(id) {
         refItems.current.forEach(item => item.classList.remove('char__item_selected'));
@@ -28,34 +26,22 @@ function CharList(props) {
     }
 
     // #region Events
-    function onRequest(offset) {
-        onCharactersLoading();
-        marvelService
-            .getCharacters(9, offset)
-            .then(onCharactersLoaded)
-            .catch(onError);
+    function onRequest(offset, initial) {
+        setNewItemLoading(!initial);
+        getCharacters(9, offset).then(onCharactersLoaded);
     }
 
     function onCharactersLoaded(newCharacters) {
         let areCharactersOver = false;
-        if (marvelService.totalCharacters - 9 <= offset) {
+        if (totalCharacters - 9 <= offset) {
             areCharactersOver = true;
         }
         setCharacters([...characters, ...newCharacters]);
-        setLoading(false);
         setNewItemLoading(false);
         setOffset(offset + 9);
         setDeadend(areCharactersOver);
     }
 
-    function onCharactersLoading() {
-        setNewItemLoading(true);
-    }
-
-    function onError() {
-        setLoading(false);
-        setError(true);
-    }
 
     function onFocus(id) {
         refItems.current.forEach((item, index) => {
@@ -71,7 +57,6 @@ function CharList(props) {
             item.classList.remove('char__item_selected');
         });
     }
-
     // #endregion
 
     function renderItems(characters) {
@@ -110,12 +95,12 @@ function CharList(props) {
     }
 
     const errMsg = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error) ? renderItems(characters) : null;
+    const spinner = loading && !newItemLoading ? <Spinner /> : null;
+    const items = renderItems(characters);
 
     return (
         <div className="char__list">
-            {errMsg}{spinner}{content}
+            {errMsg}{spinner}{items}
             <button
                 className="button button__main button__long"
                 style={{ display: deadend ? 'none' : 'block' }}
