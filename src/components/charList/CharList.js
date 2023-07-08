@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 
 import Spinner from './../spinner/Spinner';
 import ErrorMessage from './../errorMessage/ErrorMessage';
-import MarvelService from './../../services/MarvelService';
+import useMarvelService from './../../services/MarvelService';
 
 import './charList.scss';
 
 function CharList(props) {
-    const marvelService = new MarvelService();
+    const marvelService = new useMarvelService();
     const [characters, setCharacters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);

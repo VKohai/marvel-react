@@ -1,39 +1,30 @@
-class MarvelService {
-    #BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
-    #API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
-    base_offset = 0;
-    totalCharacters;
+import { useMemo } from "react";
+import { useHttp } from "../hooks/http.hook";
 
-    constructor() {
-        this.initTotal();
-    }
+const useMarvelService = () => {
+    const { loading, error, request } = useHttp();
+    const _BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
+    const _API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
+    let base_offset = 0;
 
-    initTotal = async () => {
-        const response = await this.request(`${this.#BASE_URL}characters?limit=${1}&apikey=${this.#API_KEY}`);
-        this.totalCharacters = response.data.total;
-    }
-
-    request = async (url) => {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Couldn't fetch ${url}.\tStatus: ${response.status}`);
-        }
-        return response.json();
-    }
+    let totalCharacters = useMemo(async () => {
+        const response = await request(`${_BASE_URL}characters?limit=${1}&apikey=${_API_KEY}`);
+        return response.data.total;
+    }, []);
 
     // https://gateway.marvel.com:443/v1/public/characters?limit=9&apikey=
-    getCharacters = async (limit, offset = this.base_offset) => {
-        const response = await this.request(`${this.#BASE_URL}characters?limit=${limit}&offset=${offset}&apikey=${this.#API_KEY}`);
-        return response.data.results.map(this.#parseCharacter);
+    const getCharacters = async (limit, offset = base_offset) => {
+        const response = await request(`${_BASE_URL}characters?limit=${limit}&offset=${offset}&apikey=${_API_KEY}`);
+        return response.data.results.map(parseCharacter);
     }
 
     // https://gateway.marvel.com:443/v1/public/characters/2?apikey=
-    getCharacterById = async (id) => {
-        const response = await this.request(`${this.#BASE_URL}characters/${id}?apikey=${this.#API_KEY}`);
-        return this.#parseCharacter(response.data.results[0]);
+    const getCharacterById = async (id) => {
+        const response = await request(`${_BASE_URL}characters/${id}?apikey=${_API_KEY}`);
+        return parseCharacter(response.data.results[0]);
     }
 
-    #parseCharacter = (character) => {
+    const parseCharacter = (character) => {
         const thumbnailPath = `${character.thumbnail.path}.${character.thumbnail.extension}`;
         return {
             id: character.id,
@@ -45,6 +36,8 @@ class MarvelService {
             comics: character.comics.items,
         };
     }
+
+    return { loading, error, getCharacters, getCharacterById };
 }
 
-export default MarvelService;
+export default useMarvelService;

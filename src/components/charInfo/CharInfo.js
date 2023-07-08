@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import Spinner from './../spinner/Spinner';
 import Skeleton from './../skeleton/Skeleton';
 import ErrorMessage from './../errorMessage/ErrorMessage';
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 import './charInfo.scss';
 
 
 function CharInfo(props) {
-    const marvelService = new MarvelService();
+    const marvelService = new useMarvelService();
     const [character, setCharacter] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);

@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 
 import Spinner from './../spinner/Spinner';
 import ErrorMessage from './../errorMessage/ErrorMessage';
-import MarvelService from './../../services/MarvelService';
+import useMarvelService from './../../services/MarvelService';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
 function RandomChar(props) {
-    const marvelService = new MarvelService();
+    const marvelService = new useMarvelService();
     const [character, setCharacter] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
