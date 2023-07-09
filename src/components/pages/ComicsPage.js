@@ -8,7 +8,7 @@ const ComicsPage = () => {
         <>
             <AppBanner />
             <ErrorBoundary>
-                <ComicsList checkIfImageAvaliable={checkIfImageAvaliable} />
+                <ComicsList />
             </ErrorBoundary>
         </>
     );

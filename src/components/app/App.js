@@ -1,14 +1,9 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import AppHeader from "../appHeader/AppHeader";
-
+import { MainPage, ComicsPage } from "../pages";
 
 function App() {
-    function checkIfImageAvaliable(thumbnail) {
-        if (typeof (thumbnail) === "string") {
-            return thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null
-        }
-        return false;
-    }
+
 
     return (
         <Router>
@@ -17,10 +12,10 @@ function App() {
                 <main>
                     <Switch>
                         <Route exact path="/">
-
+                            <MainPage />
                         </Route>
                         <Route exact path="/comics">
-
+                            <ComicsPage />
                         </Route>
                     </Switch>
                 </main>
