@@ -11,9 +11,19 @@ const AppHeader = () => {
             </h1>
             <nav className="app__menu">
                 <ul>
-                    <li><NavLink exact activeClassName="active" to="/">Characters</NavLink></li>
+                    <li>
+                        <NavLink
+                            to="/"
+                            className={({ isActive }) => isActive ? "active" : ""}
+                            end>Characters</NavLink>
+                    </li>
                     /
-                    <li><NavLink exact activeClassName="active" to="/comics">Comics</NavLink></li>
+                    <li>
+                        <NavLink
+                            to="/comics"
+                            className={({ isActive }) => isActive ? "active" : ""}
+                            end>Comics</NavLink>
+                    </li>
                 </ul>
             </nav>
         </header>
