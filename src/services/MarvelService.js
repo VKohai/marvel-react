@@ -1,50 +1,69 @@
-class MarvelService {
-    #BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
-    #API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
-    base_offset = 0;
-    totalCharacters;
+import { useMemo } from "react";
+import { useHttp } from "../hooks/http.hook";
 
-    constructor() {
-        this.initTotal();
-    }
+const useMarvelService = () => {
+    const { loading, error, request, clearError } = useHttp();
+    const _BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
+    const _API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
+    let baseOffset = 0;
 
-    initTotal = async () => {
-        const response = await this.request(`${this.#BASE_URL}characters?limit=${1}&apikey=${this.#API_KEY}`);
-        this.totalCharacters = response.data.total;
-    }
+    const totalCharacters = useMemo(async () => {
+        const response = await request(`${_BASE_URL}characters?limit=${1}&apikey=${_API_KEY}`);
+        return response.data.total;
+        // eslint-disable-next-line
+    }, []);
 
-    request = async (url) => {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Couldn't fetch ${url}.\tStatus: ${response.status}`);
-        }
-        return response.json();
-    }
+    const totalComics = useMemo(async () => {
+        const response = await request(`${_BASE_URL}comics?limit=${1}&apikey=${_API_KEY}`);
+        return response.data.total;
+        // eslint-disable-next-line
+    }, []);
 
-    // https://gateway.marvel.com:443/v1/public/characters?limit=9&apikey=
-    getCharacters = async (limit, offset = this.base_offset) => {
-        const response = await this.request(`${this.#BASE_URL}characters?limit=${limit}&offset=${offset}&apikey=${this.#API_KEY}`);
-        return response.data.results.map(this.#parseCharacter);
+    // https://gateway.marvel.com:443/v1/public/characters?limit=9&offset=0&apikey=
+    const getCharacters = async (limit, offset = baseOffset) => {
+        const response = await request(`${_BASE_URL}characters?limit=${limit}&offset=${offset}&apikey=${_API_KEY}`);
+        return response.data.results.map(parseCharacter);
     }
 
     // https://gateway.marvel.com:443/v1/public/characters/2?apikey=
-    getCharacterById = async (id) => {
-        const response = await this.request(`${this.#BASE_URL}characters/${id}?apikey=${this.#API_KEY}`);
-        return this.#parseCharacter(response.data.results[0]);
+    const getCharacterById = async (id) => {
+        const response = await request(`${_BASE_URL}characters/${id}?apikey=${_API_KEY}`);
+        return parseCharacter(response.data.results[0]);
+    }
+    // https://gateway.marvel.com:443/v1/public/comics?limit=9&offset=0&apikey=
+    const getComics = async (limit, offset = baseOffset) => {
+        const response = await request(`${_BASE_URL}comics?limit=${limit}&offset=${offset}&apikey=${_API_KEY}`);
+        return response.data.results.map(parseComics);
     }
 
-    #parseCharacter = (character) => {
-        const thumbnailPath = `${character.thumbnail.path}.${character.thumbnail.extension}`;
+    const parseCharacter = (character) => {
         return {
             id: character.id,
             name: character.name,
             description: character.description,
-            thumbnail: thumbnailPath,
+            thumbnail: parseThumbnail(character),
             homepage: character.urls[0].url,
             wiki: character.urls[1].url,
             comics: character.comics.items,
         };
     }
+
+    const parseComics = (comics) => {
+        return {
+            id: comics.id,
+            title: comics.title,
+            price: comics.prices[0].price,
+            thumbnail: parseThumbnail(comics),
+            url: comics.urls[0].url
+        };
+    }
+
+    const parseThumbnail = (item) => `${item.thumbnail.path}.${item.thumbnail.extension}`;
+
+    return {
+        loading, error, clearError,
+        totalCharacters, totalComics, baseOffset, getCharacters, getCharacterById, getComics
+    };
 }
 
-export default MarvelService;
+export default useMarvelService;
