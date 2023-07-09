@@ -34,7 +34,6 @@ const ComicsList = (props) => {
 
     const renderItems = (comics) => {
         const items = comics.map((item, index) => {
-            const style = props.checkIfImageAvaliable(item.thumbnail);
             return (
                 <li className="comics__item">
                     <a href={item.url} target='_blank' rel="noreferrer">
@@ -42,7 +41,6 @@ const ComicsList = (props) => {
                             className="comics__item-img"
                             src={item.thumbnail}
                             alt={item.title}
-                            style={style}
                         />
                         <div className="comics__item-name">{item.title}</div>
                         <div className="comics__item-price">{item.price}$</div>
