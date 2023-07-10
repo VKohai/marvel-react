@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import Spinner from './../spinner/Spinner';
@@ -26,7 +27,7 @@ function CharInfo(props) {
     }
 
     function onCharacterLoaded(character) {
-        setCharacter(character)
+        setCharacter(character);
     }
 
     const skeleton = character || loading || error ? null : <Skeleton />;
@@ -51,10 +52,10 @@ const View = ({ character, checkIfImageAvaliable }) => {
     for (let i = 0; i < 10; ++i) {
         if (character.comics[i] === undefined)
             break;
-
+        const comicId = character.comics[i].resourceURI.match(/\d+$/)[0];
         comics[i] = (
-            <li className="char__comics-item" key={i}>
-                <a href={character.comics[i].resourceURI} target="_blank" rel="noopener noreferrer">{character.comics[i].name}</a>
+            <li className="char__comics-item" key={comicId}>
+                <Link to={`/comics/${comicId}`} target="_blank" rel="noopener noreferrer">{character.comics[i].name}</Link>
             </li>
         );
     }

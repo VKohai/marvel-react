@@ -1,48 +1,30 @@
-import { useState } from "react";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
+import { lazy, Suspense } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
-import decoration from '../../resources/img/vision.png';
-import ErrorBoundary from "../errorBoundary/ErrorBoundary"
-import ComicsList from "../comicsList/ComicsList";
+import Spinner from "../spinner/Spinner";
+
+const Page404 = lazy(() => import('./../pages/Page404'));
+const MainPage = lazy(() => import('./../pages/MainPage'));
+const ComicsPage = lazy(() => import('./../pages/ComicsPage'));
+const SingleComicsPage = lazy(() => import('./../pages/SingleComicsPage'));
 
 function App() {
-    const [selectedCharacterId, setCharacterId] = useState(null);
-
-    function onCharacterSelected(id) {
-        setCharacterId(id);
-    }
-
-    function checkIfImageAvaliable(thumbnail) {
-        if (typeof (thumbnail) === "string") {
-            return thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null
-        }
-        return false;
-    }
-
     return (
-        <div className="app" >
-            <AppHeader />
-            <main>
-                <ErrorBoundary>
-                    <RandomChar
-                        checkIfImageAvaliable={checkIfImageAvaliable} />
-                </ErrorBoundary>
-                <div className="char__content">
-                    <ComicsList checkIfImageAvaliable={checkIfImageAvaliable} />
-                    <ErrorBoundary>
-                        <CharList
-                            onCharacterSelected={onCharacterSelected}
-                            checkIfImageAvaliable={checkIfImageAvaliable} />
-                    </ErrorBoundary>
-                    <CharInfo
-                        characterId={selectedCharacterId}
-                        checkIfImageAvaliable={checkIfImageAvaliable} />
-                </div>
-                <img className="bg-decoration" src={decoration} alt="vision" />
-            </main>
-        </div>
+        <Router>
+            <div className="app" >
+                <AppHeader />
+                <main>
+                    <Suspense fallback={<Spinner />}>
+                        <Routes>
+                            <Route path="/" element={<MainPage />} />
+                            <Route path="/comics" element={<ComicsPage />} />
+                            <Route path="/comics/:id" element={<SingleComicsPage />} />
+                            <Route path="*" element={<Page404 />} />
+                        </Routes>
+                    </Suspense>
+                </main>
+            </div>
+        </Router>
     );
 }
 
