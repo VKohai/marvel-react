@@ -35,6 +35,11 @@ const useMarvelService = () => {
         const response = await request(`${_BASE_URL}comics?limit=${limit}&offset=${offset}&apikey=${_API_KEY}`);
         return response.data.results.map(parseComics);
     }
+    // https://gateway.marvel.com:443/v1/public/comics/id?apikey=
+    const getComicsById = async (id) => {
+        const response = await request(`${_BASE_URL}comics/${id}?apikey=${_API_KEY}`);
+        return parseComics(response.data.results[0]);
+    }
 
     const parseCharacter = (character) => {
         return {
@@ -54,7 +59,9 @@ const useMarvelService = () => {
             title: comics.title,
             price: comics.prices[0].price,
             thumbnail: parseThumbnail(comics),
-            url: comics.urls[0].url
+            description: comics.description,
+            pageCount: comics.pageCount,
+            language: comics.textObject.language || 'en-us'
         };
     }
 
