@@ -57,11 +57,11 @@ const useMarvelService = () => {
         return {
             id: comics.id,
             title: comics.title,
-            price: comics.prices[0].price,
+            price: comics.prices[0]?.price,
             thumbnail: parseThumbnail(comics),
             description: comics.description,
             pageCount: comics.pageCount,
-            language: comics.textObject.language || 'en-us'
+            language: comics.textObjects[0]?.language || 'en-us'
         };
     }
 
@@ -69,7 +69,8 @@ const useMarvelService = () => {
 
     return {
         loading, error, clearError,
-        totalCharacters, totalComics, baseOffset, getCharacters, getCharacterById, getComics
+        totalCharacters, totalComics, baseOffset,
+        getCharacters, getCharacterById, getComics, getComicsById
     };
 }
 

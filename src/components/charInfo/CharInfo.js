@@ -26,7 +26,7 @@ function CharInfo(props) {
     }
 
     function onCharacterLoaded(character) {
-        setCharacter(character)
+        setCharacter(character);
     }
 
     const skeleton = character || loading || error ? null : <Skeleton />;

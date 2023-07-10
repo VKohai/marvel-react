@@ -43,7 +43,7 @@ const ComicsList = (props) => {
                             alt={item.title}
                         />
                         <div className="comics__item-name">{item.title}</div>
-                        <div className="comics__item-price">{item.price}$</div>
+                        <div className="comics__item-price">{item.price === 0 ? "Not avaliable" : `${item.price}$`}</div>
                     </Link>
                 </li>
             );
