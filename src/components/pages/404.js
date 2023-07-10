@@ -12,9 +12,11 @@ const Page404 = () => {
             }}>Page doesn't exist</h2>
             <Link style={{
                 display: 'block',
+                marginTop: '15px',
                 textAlign: 'center',
                 fontWeight: 'bold',
-                fontSize: '24px'
+                fontSize: '28px',
+                color: '#9F0013'
             }} to="/">Back to main page</Link>
         </div >
     );
