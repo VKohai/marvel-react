@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import Spinner from './../spinner/Spinner';
-import Skeleton from './../skeleton/Skeleton';
-import ErrorMessage from './../errorMessage/ErrorMessage';
+import Spinner from '../spinner/Spinner';
+import Skeleton from '../skeleton/Skeleton';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from "../../services/MarvelService";
 
 import './charInfo.scss';

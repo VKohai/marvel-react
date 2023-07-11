@@ -21,6 +21,7 @@ const MainPage = () => {
         }
         return false;
     }
+
     return (
         <>
             <ErrorBoundary>
