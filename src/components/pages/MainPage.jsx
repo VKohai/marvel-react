@@ -4,6 +4,7 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import RandomChar from "../randomChar/RandomChar";
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import CharacterSearchForm from "../characterSearchForm/CharacterSearchForm";
 
 import decoration from '../../resources/img/vision.png';
 
@@ -34,9 +35,14 @@ const MainPage = () => {
                         onCharacterSelected={onCharacterSelected}
                         checkIfImageAvaliable={checkIfImageAvaliable} />
                 </ErrorBoundary>
-                <CharInfo
-                    characterId={selectedCharacterId}
-                    checkIfImageAvaliable={checkIfImageAvaliable} />
+                <div>
+                    <CharInfo
+                        characterId={selectedCharacterId}
+                        checkIfImageAvaliable={checkIfImageAvaliable} />
+                    <ErrorBoundary>
+                        <CharacterSearchForm />
+                    </ErrorBoundary>
+                </div>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision" />
         </>
