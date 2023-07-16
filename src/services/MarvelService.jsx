@@ -34,7 +34,8 @@ const useMarvelService = () => {
     // https://gateway.marvel.com:443/v1/public/characters?name=abyss&apikey=
     const getCharacterByName = async (name) => {
         const response = await request(`${_BASE_URL}characters?name=${name}&apikey=${_API_KEY}`);
-        return parseCharacter(response.data.results[0]);
+        const result = response.data.results[0];
+        return result ? parseCharacter(result) : null;
     }
 
     // https://gateway.marvel.com:443/v1/public/comics?limit=9&offset=0&apikey=
