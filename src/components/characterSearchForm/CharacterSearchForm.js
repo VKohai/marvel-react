@@ -1,9 +1,13 @@
-import "./characterSearchForm.scss";
-import { Field, Formik, Form, ErrorMessage } from "formik";
-import { useState } from "react";
 import * as Yup from 'yup';
-import useMarvelService from "../../services/MarvelService";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Field, Formik, Form, ErrorMessage as FErrorMessage } from "formik";
+
+import useMarvelService from "../../services/MarvelService";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+
+import "./characterSearchForm.scss";
+
 const CharacterSearchForm = () => {
     const [character, setCharacter] = useState(null);
     const [result, setResult] = useState(null);
@@ -28,7 +32,6 @@ const CharacterSearchForm = () => {
         clearError();
         getCharacterByName(name).then(onCharacterLoaded);
     }
-
     const errorMessage = error ? <div className="char__search-critical-error"><ErrorMessage /></div> : null;
 
     return (
@@ -52,7 +55,7 @@ const CharacterSearchForm = () => {
                             <div className="inner">FIND</div>
                         </button>
                     </div>
-                    <ErrorMessage className="char__search-error" name="name" component="div" />
+                    <FErrorMessage className="char__search-error" name="name" component="div" />
                 </Form>
             </Formik>
             {errorMessage}

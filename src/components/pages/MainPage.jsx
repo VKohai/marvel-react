@@ -35,12 +35,14 @@ const MainPage = () => {
                         onCharacterSelected={onCharacterSelected}
                         checkIfImageAvaliable={checkIfImageAvaliable} />
                 </ErrorBoundary>
-                <CharInfo
-                    characterId={selectedCharacterId}
-                    checkIfImageAvaliable={checkIfImageAvaliable} />
-                <ErrorBoundary>
-                    <CharacterSearchForm />
-                </ErrorBoundary>
+                <div>
+                    <CharInfo
+                        characterId={selectedCharacterId}
+                        checkIfImageAvaliable={checkIfImageAvaliable} />
+                    <ErrorBoundary>
+                        <CharacterSearchForm />
+                    </ErrorBoundary>
+                </div>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision" />
         </>
