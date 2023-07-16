@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 import useMarvelService from '../../services/MarvelService';
 
@@ -115,10 +115,13 @@ function CharList(props) {
             </ul>
         );
     }
-
+    const elems = useMemo(() => {
+        return setContent(process, () => renderItems(characters), newItemLoading);
+        // eslint-disable-next-line
+    }, [process]);
     return (
         <div className="char__list">
-            {setContent(process, () => renderItems(characters), newItemLoading)}
+            {elems}
             <button
                 className="button button__main button__long"
                 style={{ display: deadend ? 'none' : 'block' }}
