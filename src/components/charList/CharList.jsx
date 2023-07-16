@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
+import checkIfImageAvaliable from './../../utils/checkIfImageAvaliable';
 
 import './charList.scss';
 
@@ -61,7 +62,7 @@ function CharList(props) {
     function renderItems(characters) {
         // Generating li elements with character's data
         const items = characters.map((character, index) => {
-            const isImgAvaliable = props.checkIfImageAvaliable(character.thumbnail);
+            const isImgAvaliable = checkIfImageAvaliable(character.thumbnail);
             return (
                 <li
                     className="char__item"

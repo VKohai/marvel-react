@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import Spinner from '../spinner/Spinner';
-import Skeleton from '../skeleton/Skeleton';
-import ErrorMessage from '../errorMessage/ErrorMessage';
+import setContent from './../../utils/setConent';
 import useMarvelService from "../../services/MarvelService";
+import checkIfImageAvaliable from './../../utils/checkIfImageAvaliable';
 
 import './charInfo.scss';
 
 
 function CharInfo(props) {
     const [character, setCharacter] = useState(null);
-    const { loading, error, clearError, getCharacterById } = useMarvelService();
+    const {
+        process,
+        clearError, getCharacterById, setProcess
+    } = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
@@ -23,60 +25,53 @@ function CharInfo(props) {
         if (!characterId)
             return;
         clearError();
-        getCharacterById(characterId).then(onCharacterLoaded);
+        getCharacterById(characterId)
+            .then(onCharacterLoaded)
+            .then(() => setProcess('confirmed'));
     }
 
     function onCharacterLoaded(character) {
         setCharacter(character);
     }
 
-    const skeleton = character || loading || error ? null : <Skeleton />;
-    const errMsg = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error || !character) ?
-        <View
-            character={character}
-            checkIfImageAvaliable={props.checkIfImageAvaliable}
-        /> : null;
-
     return (
         <div className="char__info">
-            {skeleton}{errMsg}{spinner}{content}
+            {setContent(process, View, character)}
         </div>
     );
 }
 
-const View = ({ character, checkIfImageAvaliable }) => {
-    const imgStyle = checkIfImageAvaliable(character.thumbnail);
+const View = ({ data }) => {
+    const imgStyle = checkIfImageAvaliable(data.thumbnail);
     const comics = [];
     for (let i = 0; i < 10; ++i) {
-        if (character.comics[i] === undefined)
+        if (data.comics[i] === undefined)
             break;
-        const comicId = character.comics[i].resourceURI.match(/\d+$/)[0];
+        const comicId = data.comics[i].resourceURI.match(/\d+$/)[0];
         comics[i] = (
             <li className="char__comics-item" key={comicId}>
-                <Link to={`/comics/${comicId}`} target="_blank" rel="noopener noreferrer">{character.comics[i].name}</Link>
+                <Link to={`/comics/${comicId}`} target="_blank" rel="noopener noreferrer">{data.comics[i].name}</Link>
             </li>
         );
     }
     return (
         <>
             <div className="char__basics">
-                <img src={character.thumbnail} alt={character.name} style={imgStyle} />
+                <img src={data.thumbnail} alt={data.name} style={imgStyle} />
                 <div>
-                    <div className="char__info-name">{character.name}</div>
+                    <div className="char__info-name">{data.name}</div>
                     <div className="char__btns">
-                        <a href={character.homepage} target='_blank' rel='noreferrer' className="button button__main">
+                        <a href={data.homepage} target='_blank' rel='noreferrer' className="button button__main">
                             <div className="inner">homepage</div>
                         </a>
-                        <a href={character.wiki} target='_blank' rel='noreferrer' className="button button__secondary">
+                        <a href={data.wiki} target='_blank' rel='noreferrer' className="button button__secondary">
                             <div className="inner">Wiki</div>
                         </a>
                     </div>
                 </div>
             </div>
             <div className="char__descr">
-                {character.description}
+                {data.description}
             </div>
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
+import checkIfImageAvaliable from './../../utils/checkIfImageAvaliable';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
@@ -30,12 +31,7 @@ function RandomChar(props) {
 
     const errMsg = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
-    props.checkIfImageAvaliable(character?.thumbnail);
-    const content = !(loading || error) ?
-        <View
-            character={character}
-            checkIfImageAvaliable={props.checkIfImageAvaliable}
-        /> : null;
+    const content = !(loading || error) ? <View character={character} /> : null;
 
     return (
         <div className="randomchar">
@@ -58,7 +54,7 @@ function RandomChar(props) {
     );
 }
 
-const View = ({ character, checkIfImageAvaliable }) => {
+const View = ({ character }) => {
     if (!character)
         return null;
 
