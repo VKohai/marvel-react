@@ -38,7 +38,9 @@ const MainPage = () => {
                 <CharInfo
                     characterId={selectedCharacterId}
                     checkIfImageAvaliable={checkIfImageAvaliable} />
-                <CharacterSearchForm />
+                <ErrorBoundary>
+                    <CharacterSearchForm />
+                </ErrorBoundary>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision" />
         </>
