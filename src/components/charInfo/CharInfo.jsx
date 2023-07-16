@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import setContent from './../../utils/setConent';
 import useMarvelService from "../../services/MarvelService";
+
+import setContent from './../../utils/setConent';
 import checkIfImageAvaliable from './../../utils/checkIfImageAvaliable';
 
 import './charInfo.scss';
@@ -11,8 +12,8 @@ import './charInfo.scss';
 function CharInfo(props) {
     const [character, setCharacter] = useState(null);
     const {
-        process,
-        clearError, getCharacterById, setProcess
+        process, setProcess,
+        clearError, getCharacterById
     } = useMarvelService();
 
     useEffect(() => {
@@ -20,7 +21,7 @@ function CharInfo(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.characterId]);
 
-    function updateCharacter() {
+    const updateCharacter = () => {
         const { characterId } = props;
         if (!characterId)
             return;
@@ -42,6 +43,8 @@ function CharInfo(props) {
 }
 
 const View = ({ data }) => {
+    if (!data) return;
+
     const imgStyle = checkIfImageAvaliable(data.thumbnail);
     const comics = [];
     for (let i = 0; i < 10; ++i) {

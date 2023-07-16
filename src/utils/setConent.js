@@ -3,9 +3,6 @@ import Skeleton from './../components/skeleton/Skeleton';
 import ErrorMessage from './../components/errorMessage/ErrorMessage';
 
 const setContent = (process, Component, data) => {
-    if (!data)
-        return;
-
     switch (process) {
         case "waiting":
             return <Skeleton />;

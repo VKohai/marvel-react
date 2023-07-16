@@ -22,8 +22,7 @@ const MainPage = () => {
             <Helmet>
                 <meta
                     name="description"
-                    content="Marvel information portal"
-                />
+                    content="Marvel information portal" />
                 <title>Marvel information portal</title>
             </Helmet>
             <ErrorBoundary>
@@ -31,12 +30,10 @@ const MainPage = () => {
             </ErrorBoundary>
             <div className="char__content">
                 <ErrorBoundary>
-                    <CharList
-                        onCharacterSelected={onCharacterSelected} />
+                    <CharList onCharacterSelected={onCharacterSelected} />
                 </ErrorBoundary>
                 <div>
-                    <CharInfo
-                        characterId={selectedCharacterId} />
+                    <CharInfo characterId={selectedCharacterId} />
                     <ErrorBoundary>
                         <CharacterSearchForm />
                     </ErrorBoundary>
