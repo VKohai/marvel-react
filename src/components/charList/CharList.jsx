@@ -1,10 +1,28 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
 
+import Spinner from './../spinner/Spinner';
+import ErrorMessage from './../errorMessage/ErrorMessage';
+
+import checkIfImageAvaliable from './../../utils/checkIfImageAvaliable';
+
 import './charList.scss';
+
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case "waiting":
+            return <Spinner />;
+        case "loading":
+            return newItemLoading ? <Component /> : <Spinner />;
+        case "confirmed":
+            return <Component />;
+        case 'error':
+            return <ErrorMessage />;
+        default:
+            throw new Error("Unexcepted process state");
+    }
+}
 
 function CharList(props) {
     const refItems = useRef([]);
@@ -12,11 +30,14 @@ function CharList(props) {
     const [characters, setCharacters] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [newItemLoading, setNewItemLoading] = useState(false);
-    const { loading, error, totalCharacters, baseOffset, getCharacters } = useMarvelService();
+    const { process, setProcess,
+        totalCharacters, baseOffset, getCharacters } = useMarvelService();
     const [offset, setOffset] = useState(baseOffset);
 
-    // eslint-disable-next-line
-    useEffect(() => { onRequest(baseOffset, true); }, []);
+    useEffect(() => {
+        onRequest(baseOffset, true);
+        // eslint-disable-next-line
+    }, []);
 
     function focusOnItem(id) {
         refItems.current.forEach(item => item.classList.remove('char__item_selected'));
@@ -28,7 +49,9 @@ function CharList(props) {
     // #region Events
     function onRequest(offset, initial) {
         setNewItemLoading(!initial);
-        getCharacters(9, offset).then(onCharactersLoaded);
+        getCharacters(9, offset)
+            .then(onCharactersLoaded)
+            .then(() => setProcess("confirmed"));
     }
 
     function onCharactersLoaded(newCharacters) {
@@ -61,7 +84,7 @@ function CharList(props) {
     function renderItems(characters) {
         // Generating li elements with character's data
         const items = characters.map((character, index) => {
-            const isImgAvaliable = props.checkIfImageAvaliable(character.thumbnail);
+            const isImgAvaliable = checkIfImageAvaliable(character.thumbnail);
             return (
                 <li
                     className="char__item"
@@ -92,14 +115,13 @@ function CharList(props) {
             </ul>
         );
     }
-
-    const errMsg = error ? <ErrorMessage /> : null;
-    const spinner = loading && !newItemLoading ? <Spinner /> : null;
-    const items = renderItems(characters);
-
+    const elems = useMemo(() => {
+        return setContent(process, () => renderItems(characters), newItemLoading);
+        // eslint-disable-next-line
+    }, [process]);
     return (
         <div className="char__list">
-            {errMsg}{spinner}{items}
+            {elems}
             <button
                 className="button button__main button__long"
                 style={{ display: deadend ? 'none' : 'block' }}

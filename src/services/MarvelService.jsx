@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useHttp } from "../hooks/http.hook";
 
 const useMarvelService = () => {
-    const { loading, error, request, clearError } = useHttp();
+    const { loading, error, request, clearError, process, setProcess } = useHttp();
     const _BASE_URL = 'https://gateway.marvel.com:443/v1/public/';
     const _API_KEY = 'b560d3ebe26a89cfd4717f47bf9fb66f';
     let baseOffset = 0;
@@ -28,7 +28,7 @@ const useMarvelService = () => {
     // https://gateway.marvel.com:443/v1/public/characters/2?apikey=
     const getCharacterById = async (id) => {
         const response = await request(`${_BASE_URL}characters/${id}?apikey=${_API_KEY}`);
-        return parseCharacter(response.data.results[0]);
+        return parseCharacter(response.data?.results[0]);
     }
 
     // https://gateway.marvel.com:443/v1/public/characters?name=abyss&apikey=
@@ -76,9 +76,10 @@ const useMarvelService = () => {
     const parseThumbnail = (item) => `${item.thumbnail.path}.${item.thumbnail.extension}`;
 
     return {
-        loading, error, clearError,
+        loading, error, process, clearError, setProcess,
         totalCharacters, totalComics, baseOffset,
-        getCharacters, getCharacterById, getCharacterByName, getComics, getComicsById
+        getCharacters, getCharacterById, getCharacterByName,
+        getComics, getComicsById
     };
 }
 

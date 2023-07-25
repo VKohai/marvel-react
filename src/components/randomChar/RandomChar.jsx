@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
+
+import setContent from '../../utils/setConent';
+import checkIfImageAvaliable from './../../utils/checkIfImageAvaliable';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
 function RandomChar(props) {
-    const { loading, error, getCharacterById, clearError } = useMarvelService();
+    const { getCharacterById, clearError, process, setProcess } = useMarvelService();
     const [character, setCharacter] = useState(null);
 
     useEffect(() => {
@@ -16,30 +17,21 @@ function RandomChar(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function updateCharacter() {
-        clearError();
+    const updateCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        getCharacterById(id).then(onCharacterLoaded);
+        clearError();
+        getCharacterById(id)
+            .then(onCharacterLoaded)
+            .then(() => setProcess("confirmed"));
     }
 
-    // #region events
-    function onCharacterLoaded(character) {
+    const onCharacterLoaded = (character) => {
         setCharacter(character);
     }
-    // #endregion 
-
-    const errMsg = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    props.checkIfImageAvaliable(character?.thumbnail);
-    const content = !(loading || error) ?
-        <View
-            character={character}
-            checkIfImageAvaliable={props.checkIfImageAvaliable}
-        /> : null;
 
     return (
         <div className="randomchar">
-            {errMsg}{spinner}{content}
+            {setContent(process, View, character)}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br />
@@ -58,12 +50,12 @@ function RandomChar(props) {
     );
 }
 
-const View = ({ character, checkIfImageAvaliable }) => {
-    if (!character)
+const View = ({ data }) => {
+    if (!data)
         return null;
 
-    const { name, thumbnail, homepage, wiki } = character;
-    let { description } = character;
+    const { name, thumbnail, homepage, wiki } = data;
+    let { description } = data;
     if (typeof (description) === 'string') {
         description =
             description === '' ? 'No description' : description.slice(0, 175).trim() + "...";

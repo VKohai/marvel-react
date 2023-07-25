@@ -17,36 +17,23 @@ const MainPage = () => {
         setCharacterId(id);
     }
 
-    function checkIfImageAvaliable(thumbnail) {
-        if (typeof (thumbnail) === "string") {
-            return thumbnail.match("image_not_available") || thumbnail.match("4c002e0305708") ? { objectFit: "contain" } : null
-        }
-        return false;
-    }
-
     return (
         <>
             <Helmet>
                 <meta
                     name="description"
-                    content="Marvel information portal"
-                />
+                    content="Marvel information portal" />
                 <title>Marvel information portal</title>
             </Helmet>
             <ErrorBoundary>
-                <RandomChar
-                    checkIfImageAvaliable={checkIfImageAvaliable} />
+                <RandomChar />
             </ErrorBoundary>
             <div className="char__content">
                 <ErrorBoundary>
-                    <CharList
-                        onCharacterSelected={onCharacterSelected}
-                        checkIfImageAvaliable={checkIfImageAvaliable} />
+                    <CharList onCharacterSelected={onCharacterSelected} />
                 </ErrorBoundary>
                 <div>
-                    <CharInfo
-                        characterId={selectedCharacterId}
-                        checkIfImageAvaliable={checkIfImageAvaliable} />
+                    <CharInfo characterId={selectedCharacterId} />
                     <ErrorBoundary>
                         <CharacterSearchForm />
                     </ErrorBoundary>
